@@ -5,10 +5,8 @@
 
 # Tyrell Perera (tyrell.perera@gmail.com)
 
-source /pgenv.sh
-
-echo "Running with these environment options" >> /var/log/cron.log
-set | grep PG >> /var/log/cron.log
+echo "Running with these environment options"
+set | grep PG
 
 MYDATE=`date +%d-%B-%Y`
 MONTH=$(date +%B)
@@ -18,16 +16,16 @@ MYBACKUPDIR=${MYBASEDIR}/${YEAR}/${MONTH}
 mkdir -p ${MYBACKUPDIR}
 cd ${MYBACKUPDIR}
 
-echo "Backup running to $MYBACKUPDIR" >> /var/log/cron.log
+echo "Backup running to $MYBACKUPDIR"
 
 #
 # Loop through each postgres database and back it up to S3.
 #
 DBLIST=`psql -h $PGHOST -U $PGUSER --no-password -l | awk '{print $1}' | grep -v "+" | grep -v "Name" | grep -v "List" | grep -v "(" | grep -v "template" | grep -v "postgres" | grep -v "|" | grep -v ":"`
-echo "Databases to backup: ${DBLIST}" >> /var/log/cron.log
+echo "Databases to backup: ${DBLIST}"
 for DB in ${DBLIST}
 do
-  echo "Backing up $DB"  >> /var/log/cron.log
+  echo "Backing up $DB"
   FILENAME=${DUMPPREFIX}_${DB}.${MYDATE}.gz
   FILEPATH=${MYBACKUPDIR}/${FILENAME}
   FORMAT='sql.gz'

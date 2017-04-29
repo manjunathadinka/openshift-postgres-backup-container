@@ -15,44 +15,13 @@ set | grep DUMPPREFIX
 set | grep S3BUCKET
 set | grep AWS
 
-oc create -f - <<EOF
-    #cat <<EOF
-apiVersion: v1
-kind: Pod
-metadata:
-  generateName: backup-postgres
-spec:
-  containers:
-  - image: tyrell/openshift-postgres-backup-container:latest
-    imagePullPolicy: Always
-    name: backup
-    volumeMounts:
-    - name: empty
-      mountPath: /data
-    env:
-      - name: PGHOST
-        value: "${PGHOST}"
-      - name: PGPORT
-        value: "${PGPORT}"
-      - name: PGUSER
-        value: "${PGUSER}"
-      - name: PGPASSWORD
-        value: "${PGPASSWORD}"
-      - name: DUMPPREFIX
-        value: "${DUMPPREFIX}"
-      - name: S3BUCKET
-        value: "${S3BUCKET}"
-      - name: AWS_ACCESS_KEY_ID
-        value: "${AWS_ACCESS_KEY_ID}"
-      - name: AWS_SECRET_ACCESS_KEY
-        value: "${AWS_SECRET_ACCESS_KEY}"
-      - name: AWS_DEFAULT_REGION
-        value: "${AWS_DEFAULT_REGION}"
-  dnsPolicy: ClusterFirst
-  nodeSelector:
-    role: infra
-  restartPolicy: Never
-  volumes:
-  - name: empty
-    emptyDir: {}
-EOF
+oc new-app tyrell/openshift-postgres-backup-container:latest \
+    -e PGHOST=${PGHOST} \
+    -e PGPORT=${PGPORT} \
+    -e PGUSER=${PGUSER} \
+    -e PGPASSWORD=${PGPASSWORD} \
+    -e DUMPPREFIX=${DUMPPREFIX} \
+    -e S3BUCKET=${S3BUCKET} \
+    -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
+    -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
+    -e AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
