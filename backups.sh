@@ -21,13 +21,18 @@ cd ${MYBACKUPDIR}
 echo "Backup running to $MYBACKUPDIR" >> /var/log/cron.log
 
 #
-# Loop through each postgres database and backing it up to S3
+# Loop through each postgres database and back it up to S3.
 #
-DBLIST=`psql -l | awk '{print $1}' | grep -v "+" | grep -v "Name" | grep -v "List" | grep -v "(" | grep -v "template" | grep -v "postgres" | grep -v "|" | grep -v ":"`
+DBLIST=`psql -h $PGHOST -U $PGUSER --no-password -l | awk '{print $1}' | grep -v "+" | grep -v "Name" | grep -v "List" | grep -v "(" | grep -v "template" | grep -v "postgres" | grep -v "|" | grep -v ":"`
 echo "Databases to backup: ${DBLIST}" >> /var/log/cron.log
 for DB in ${DBLIST}
 do
   echo "Backing up $DB"  >> /var/log/cron.log
-  FILENAME=${MYBACKUPDIR}/${DUMPPREFIX}_${DB}.${MYDATE}.dmp
-  pg_dump -i -Fc -f ${FILENAME} -x -O ${DB}
+  FILENAME=${DUMPPREFIX}_${DB}.${MYDATE}.gz
+  FILEPATH=${MYBACKUPDIR}/${FILENAME}
+  FORMAT='sql.gz'
+  pg_dump -x -h $PGHOST -U $PGUSER --no-password -d $DB | gzip > $FILEPATH
+
+  echo "Uploading $FILEPATH to S3 at s3://$S3BUCKET/$FILENAME"
+  aws s3 cp ${FILEPATH} s3://${S3BUCKET}/${FILENAME}
 done
