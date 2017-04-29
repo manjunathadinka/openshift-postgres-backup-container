@@ -1,7 +1,7 @@
-export PGUSER=
-export PGPASSWORD=
-export PGPORT=
-export PGHOST=
+export PGUSER=django
+export PGPASSWORD=django
+export PGPORT=5432
+export PGHOST=172.30.120.247
 export DUMPPREFIX=cdci
 export S3BUCKET=
 export AWS_ACCESS_KEY_ID=
