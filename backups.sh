@@ -5,6 +5,11 @@
 
 # Tyrell Perera (tyrell.perera@gmail.com)
 
+# Define a timestamp function
+timestamp() {
+  date +"%T"
+}
+
 echo "Running with these environment options"
 set | grep PG
 
@@ -25,13 +30,13 @@ echo "Databases to backup: ${DBLIST}"
 for DB in ${DBLIST}
 do
   echo "Backing up $DB"
-  FILENAME=${DUMPPREFIX}_${DB}.${MYDATE}.gz
+  FILENAME=${DUMPPREFIX}_${DB}.$(timestamp).gz
   FILEPATH=${MYBACKUPDIR}/${FILENAME}
   FORMAT='sql.gz'
   pg_dump -x -h $PGHOST -U $PGUSER --no-password $DB | gzip > $FILEPATH
 
-  echo "Uploading $FILEPATH to S3 at s3://$S3BUCKET/$FILENAME"
-  aws s3 cp ${FILEPATH} s3://${S3BUCKET}/${FILENAME}
+  echo "Uploading $FILEPATH to S3 at s3://${S3BUCKET}/${YEAR}/${MONTH}/${MYDATE}/${FILENAME}"
+  aws s3 cp ${FILEPATH} s3://${S3BUCKET}/${YEAR}/${MONTH}/${MYDATE}/${FILENAME}
   echo "Upload to S3 complete for $FILEPATH"
 done
 
