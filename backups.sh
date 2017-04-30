@@ -17,7 +17,6 @@ mkdir -p ${MYBACKUPDIR}
 cd ${MYBACKUPDIR}
 
 echo "Backup running to $MYBACKUPDIR"
-
 #
 # Loop through each postgres database and back it up to S3.
 #
@@ -33,4 +32,8 @@ do
 
   echo "Uploading $FILEPATH to S3 at s3://$S3BUCKET/$FILENAME"
   ~/.local/bin/aws s3 cp ${FILEPATH} s3://${S3BUCKET}/${FILENAME}
+  echo "Upload to S3 complete for $FILEPATH"
 done
+
+echo "Cleaning up local files at $MYBACKUPDIR ..."
+rm -rf *.*
