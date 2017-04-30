@@ -32,5 +32,5 @@ do
   pg_dump -x -h $PGHOST -U $PGUSER --no-password -d $DB | gzip > $FILEPATH
 
   echo "Uploading $FILEPATH to S3 at s3://$S3BUCKET/$FILENAME"
-  aws s3 cp ${FILEPATH} s3://${S3BUCKET}/${FILENAME}
+  ~/.local/bin/aws s3 cp ${FILEPATH} s3://${S3BUCKET}/${FILENAME}
 done

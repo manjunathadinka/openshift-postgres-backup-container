@@ -16,6 +16,7 @@ set | grep S3BUCKET
 set | grep AWS
 
 oc new-app tyrell/openshift-postgres-backup-container:latest \
+    --name=postgres-backup-creation \
     -e PGHOST=${PGHOST} \
     -e PGPORT=${PGPORT} \
     -e PGUSER=${PGUSER} \
@@ -25,3 +26,9 @@ oc new-app tyrell/openshift-postgres-backup-container:latest \
     -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
     -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
     -e AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
+
+oc volume dc/postgres-backup-creation --add \
+    --type=persistentVolumeClaim \
+    --claim-size=1Gi \
+    --mount-path=/backups \
+    --name=backups
