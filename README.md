@@ -15,11 +15,11 @@ A public Docker image is hosted at https://hub.docker.com/r/tyrell/openshift-pos
   1. Clone this repository.
   2. Build the Docker image.
   
-    ` docker build -t <your-docker-repo>/openshift-postgres-backup-container .
+     `docker build -t <your-docker-repo>/openshift-postgres-backup-container .
     
   3. Deploy the image to your repository 
   
-    ` docker push <your-docker-repo>/openshift-postgres-backup-container:latest
+     `docker push <your-docker-repo>/openshift-postgres-backup-container:latest
     
   4. Change the conf/env-config.txt and fill in the mandatory environment variables. 
   5. Change the create-pod.sh bash script to pick your image from <your-docker-repo>/openshift-postgres-backup-container:latest
