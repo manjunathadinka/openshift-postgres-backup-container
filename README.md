@@ -26,5 +26,5 @@ A public Docker image is hosted at https://hub.docker.com/r/tyrell/openshift-pos
   6. run the create-pod.sh bash script.
 
 ## License
-Copyright (c) 2016 Tyrell Perera <tyrell.perera@gmail.com>
+Copyright (c) 2017 Tyrell Perera <tyrell.perera@gmail.com>
 Licensed under the MIT license.
