@@ -28,10 +28,10 @@ do
   FILENAME=${DUMPPREFIX}_${DB}.${MYDATE}.gz
   FILEPATH=${MYBACKUPDIR}/${FILENAME}
   FORMAT='sql.gz'
-  pg_dump -x -h $PGHOST -U $PGUSER --no-password -d $DB | gzip > $FILEPATH
+  pg_dump -x -h $PGHOST -U $PGUSER --no-password $DB | gzip > $FILEPATH
 
   echo "Uploading $FILEPATH to S3 at s3://$S3BUCKET/$FILENAME"
-  ~/.local/bin/aws s3 cp ${FILEPATH} s3://${S3BUCKET}/${FILENAME}
+  aws s3 cp ${FILEPATH} s3://${S3BUCKET}/${FILENAME}
   echo "Upload to S3 complete for $FILEPATH"
 done
 
